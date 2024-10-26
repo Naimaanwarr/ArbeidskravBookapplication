@@ -1,6 +1,6 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const root = createRoot(document.getElementById("root"));
 
@@ -33,6 +33,21 @@ function LibraryApplication() {
     const [books, setBooks] = useState([]);
 
 
+    async function loadLibrary(){
+        const response = await fetch("/api/books");
+        if (response.ok) {
+          setBooks(await response.json());
+        }else{
+            console.log("something went wrong");
+        }
+    }
+
+    useEffect(() => {
+        loadLibrary()
+    }, []);
+
+
+
    async function handleNewAdd(book) {
         setBooks((prevBooks) => [book, ...prevBooks]);
 
@@ -42,7 +57,7 @@ function LibraryApplication() {
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify(Books),
+        body: JSON.stringify(Book),
     })
 }
 
